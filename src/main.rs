@@ -40,6 +40,30 @@ fn main() {
     }
 }
 
+fn base_config_dir_exists() -> bool {
+    Path::new("~/.config/config-swapper/.base").exists()
+}
+
+fn create_base_config_dir() {
+    let home_path = std::env::var("HOME").unwrap();
+
+    let config_dir_path = home_path.clone() + "/.config/config-swapper/";
+    if let Err(..) = fs::create_dir_all(config_dir_path) {
+        let result = "Error creating config folder in ~/.config/config-swapper/";
+        println!("{}", result);
+        return;
+    }
+
+    let base_file_path = home_path.clone() + "/.config/config-swapper/.base";
+    if let Err(..) = fs::write(Path::new(&base_file_path), "") {
+        let result = "Error creating config file in ~/.config/config-swapper/.base";
+        println!("{}", result);
+        return;
+    }
+
+    println!("Successfully created base config files.");
+}
+
 fn is_config_initialized() -> bool {
     false
 }
@@ -63,6 +87,10 @@ fn create_proj_config_file() -> Result<(), std::io::Error> {
 fn init_handler(mode: String) {
     if !is_config_initialized() {
         create_config_location();
+    }
+
+    if !base_config_dir_exists() {
+        create_base_config_dir();
     }
 
     if proj_config_file_exists() {
