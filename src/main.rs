@@ -40,10 +40,16 @@ fn main() {
     }
 }
 
+// base_config_dir_exists() checks if the .base file exists
 fn base_config_dir_exists() -> bool {
-    Path::new("~/.config/config-swapper/.base").exists()
+    let home_path = std::env::var("HOME").unwrap();
+    let base_file_path = home_path.clone() + "/.config/config-swapper/.base";
+
+    Path::new(&base_file_path).exists()
 }
 
+// create_base_config_dir() creates a directory in $HOME/.config/config-swapper/
+// and the .base file that contains something TODO: here
 fn create_base_config_dir() {
     let home_path = std::env::var("HOME").unwrap();
 
@@ -68,12 +74,14 @@ fn is_config_initialized() -> bool {
     false
 }
 
+// proj_config_file_exists() checks if the .cfs file exists in the current directory.
 fn proj_config_file_exists() -> bool {
     Path::new("./.cfs").exists()
 }
 
 fn create_config_location() {
     println!("Creating base config...\n");
+    todo!()
 }
 
 fn create_proj_config_file() -> Result<(), std::io::Error> {
@@ -84,13 +92,20 @@ fn create_proj_config_file() -> Result<(), std::io::Error> {
     Ok(())
 }
 
+// init_handler() initializes the directory to create the .cfs file which contains information about
+// the current configuration. TODO: Add proper docs
+//
+// If the base configuration directory in the $HOME/.config/config-swapper/ directory does not exist, create it first.
+//
+// Once the base directory is created, create a directory specific to the current project which
+// will contain all the config files for the project.
 fn init_handler(mode: String) {
-    if !is_config_initialized() {
-        create_config_location();
-    }
-
     if !base_config_dir_exists() {
         create_base_config_dir();
+    }
+
+    if !is_config_initialized() {
+        create_config_location();
     }
 
     if proj_config_file_exists() {
@@ -115,6 +130,7 @@ fn init_handler(mode: String) {
     }
 }
 
+// reset_handler() removes all existing .cfs file in the current directory
 fn reset_handler() {
     println!("Removing config file...");
     if !proj_config_file_exists() {
