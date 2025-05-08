@@ -34,12 +34,31 @@ pub fn create_proj_config_file() -> Result<(), std::io::Error> {
 }
 
 pub fn create_config_location() {
-    println!("Creating base config...\n");
-    todo!()
+    println!("Creating project config dir.");
+    // Config dir.
+    let home_path = std::env::var("HOME").unwrap();
+    let config_dir_path = home_path.clone() + "/.config/config-swapper/";
+    // Directory for tracked files.
+    let current_path = Path::new("./");
+    let current_path_hash = create_dir_hash(current_path);
+    let full_path = config_dir_path + current_path_hash.as_str();
+
+    if Path::new(&full_path).exists() {
+        println!("Path already exists. Skipping directory creation.");
+        return;
+    }
+
+    if let Err(..) = fs::create_dir_all(full_path) {
+        let result = "Error config folder in ~/.config/config-swapper/";
+        println!("{}", result);
+        return;
+    }
+
+    println!("Successfuly created project config dir.");
 }
 
-// init_handler() initializes the directory to create the .cfs file which contains information about
-// the current configuration. TODO: Add proper docs
+// init_handler initializes the directory to create the .cfs file which contains information about
+// the current configuration.
 //
 // If the base configuration directory in the $HOME/.config/config-swapper/ directory does not exist, create it first.
 //

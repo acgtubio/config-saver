@@ -1,7 +1,7 @@
 mod commands;
 
 use clap::{Parser, Subcommand};
-use commands::{init::init_handler, reset::reset_handler};
+use commands::{init::init_handler, reset::reset_handler, track::track_file};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -16,7 +16,7 @@ struct Args {
 enum Command {
     Config,
     Init,
-    TrackFile {
+    Track {
         #[arg(short, long)]
         filename: String,
     },
@@ -33,8 +33,8 @@ fn main() {
         Command::Init => {
             init_handler(args.mode);
         }
-        Command::TrackFile { filename } => {
-            println!("Tracking: {}", filename);
+        Command::Track { filename } => {
+            track_file(filename);
         }
         Command::Reset => {
             reset_handler();

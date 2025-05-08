@@ -1,4 +1,7 @@
-use std::path::Path;
+use std::{
+    hash::{DefaultHasher, Hash, Hasher},
+    path::Path,
+};
 
 // base_config_dir_exists() checks if the .base file exists
 pub fn base_config_dir_exists() -> bool {
@@ -7,7 +10,7 @@ pub fn base_config_dir_exists() -> bool {
 
     Path::new(&base_file_path).exists()
 }
-//
+
 // proj_config_file_exists() checks if the .cfs file exists in the current directory.
 pub fn proj_config_file_exists() -> bool {
     Path::new("./.cfs").exists()
@@ -15,4 +18,11 @@ pub fn proj_config_file_exists() -> bool {
 
 pub fn is_config_initialized() -> bool {
     false
+}
+
+// Returns string representation of a directory's hash.
+pub fn create_dir_hash(path: &Path) -> String {
+    let mut hasher = DefaultHasher::new();
+    path.hash(&mut hasher);
+    hasher.finish().to_string()
 }
